@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 export default function Home() {
@@ -29,11 +28,6 @@ export default function Home() {
               <td>Cold Drink</td>
               <td>20$</td>
               <td className="d-flex justify-content-center">
-                <Link to="ProductDetails">
-                  <button className="btn btn-success text-decoration-none">
-                    <RemoveRedEyeIcon />
-                  </button>
-                </Link>
                 <Link to="UpdateProduct">
                   <button className="btn btn-warning text-decoration-none ms-2">
                     <EditIcon />
