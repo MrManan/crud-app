@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-
+import Axios from "axios";
 export default function CreateProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState(0);
   const handleProduct = (e) => {
-    console.log(price);
-    console.log(productName);
     e.preventDefault();
+    Axios.post("http://localhost:3001/product", {
+      productName: productName,
+      productPrice: price,
+    }).then(() => {
+      alert("Successfully done");
+    });
+    console.log(price, productName);
   };
 
   return (
