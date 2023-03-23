@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import Axios from "axios";
+import axios from "axios";
 export default function CreateProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState(0);
   const handleProduct = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:3001/product", {
-      productName: productName,
-      productPrice: price,
-    }).then(() => {
-      alert("Successfully done");
-    });
+    axios
+      .post("http://localhost:3001/product", {
+        productName: productName,
+        productPrice: price,
+      })
+      .then(() => {
+        alert("Successfully done");
+      });
     console.log(price, productName);
   };
 
@@ -36,7 +38,7 @@ export default function CreateProduct() {
                 Price
               </label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 id="price"
                 onChange={(e) => setPrice(e.target.value)}
