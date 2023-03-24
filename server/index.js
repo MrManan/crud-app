@@ -38,18 +38,14 @@ app.get("/api/getData", (req, res) => {
 });
 
 app.put("/update/:id", (req, res) => {
+  const sql =
+    "UPDATE productdetails SET productName = ?, productPrice = ? WHERE id = ?";
+  const values = [req.body.productName, req.body.productPrice];
   const id = req.params.id;
-  const productName = req.body.productName;
-  const productPrice = req.body.productPrice;
-
-  connection.query(
-    "UPDATE productdetails SET productName = ?, productPrice = ? WHERE id = ?",
-    [productName, productPrice, id],
-    (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    }
-  );
+  connection.query(sql, [...values, id], (error, results) => {
+    if (error) throw error;
+    res.send(results);
+  });
 });
 
 app.delete("/delete/:id", (req, res) => {

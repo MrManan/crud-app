@@ -1,18 +1,27 @@
-import React, { useState } from "react";
-import { Axios } from "axios";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 export default function UpdateProduct() {
-  const [productName, setProductName] = useState();
-  const [price, setPrice] = useState();
+  const navigate = useNavigate();
 
-  const updateProduct = (event, id) => {
-    Axios.put("http://localhost:3001/update", {
-      productName: productName,
-      productPrice: price,
-      id: id,
-    }).then((response) => {
-      alert("Updated");
-    });
-    event.preventDefault();
+  const [productName, setProductName] = useState("");
+  const [productPrice, setPrice] = useState("");
+  const { id } = useParams();
+
+  const handleProduct = (e) => {
+    e.preventDefault();
+
+    axios
+      .put("http://localhost:3001/update/" + id, {
+        productName,
+        productPrice,
+      })
+      .then((res) => {
+        console.log(res.data);
+        alert("Successfully done");
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -20,7 +29,7 @@ export default function UpdateProduct() {
       <div className="container">
         <div className="row">
           <div className="col-md-6">
-            <form className="mt-5" onSubmit={updateProduct}>
+            <form className="mt-5" onSubmit={handleProduct}>
               <div className="mb-3">
                 <label htmlFor="product" className="form-label">
                   Enter Product Name
@@ -39,10 +48,10 @@ export default function UpdateProduct() {
                   Price
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   className="form-control"
                   id="price"
-                  value={price}
+                  value={productPrice}
                   onChange={(e) => setPrice(e.target.value)}
                 />
               </div>

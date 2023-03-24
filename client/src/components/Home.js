@@ -15,7 +15,7 @@ export default function Home() {
     axios.delete(`http://localhost:3001/delete/${id}`).then((response) => {
       setProducts(
         products.filter((data) => {
-          return data.id === id;
+          return data.id !== id;
         })
       );
     });
@@ -47,7 +47,7 @@ export default function Home() {
                   <td>{data.productName}</td>
                   <td>{data.productPrice}</td>
                   <td className="d-flex justify-content-center">
-                    <Link to="UpdateProduct">
+                    <Link to={`UpdateProduct/${data.id}`}>
                       <button className="btn btn-warning text-decoration-none ms-2">
                         <EditIcon />
                       </button>

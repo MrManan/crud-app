@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export default function CreateProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState(0);
+  const navigate = useNavigate();
+
   const handleProduct = (e) => {
     e.preventDefault();
     axios
@@ -12,6 +15,7 @@ export default function CreateProduct() {
       })
       .then(() => {
         alert("Successfully done");
+        navigate("/");
       });
     console.log(price, productName);
   };
@@ -26,7 +30,7 @@ export default function CreateProduct() {
                 Enter Product Name
               </label>
               <input
-                type="name"
+                type="text"
                 className="form-control"
                 id="product"
                 aria-describedby="nameHelp"
