@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-export default function Navbar() {
+export default function Navbar(props) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    props.onSearchChange(event.target.value);
+  };
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            Navbar
+            CRUD
           </Link>
           <button
             className="navbar-toggler"
@@ -32,7 +38,12 @@ export default function Navbar() {
                 placeholder="Search"
                 aria-label="Search"
               />
-              <button className="btn btn-outline-secondary" type="submit">
+              <button
+                className="btn btn-outline-secondary"
+                type="submit"
+                value={searchTerm}
+                onChange={handleSearch}
+              >
                 Search
               </button>
             </form>

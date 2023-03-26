@@ -1,27 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+
 export default function UpdateProduct() {
   const navigate = useNavigate();
-
-  const [productName, setProductName] = useState("");
-  const [productPrice, setPrice] = useState("");
   const { id } = useParams();
+
+  const [product, setProduct] = useState({});
+  const [productName, setProductName] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+
+  const handleProductName = (event) => {
+    setProductName(event.target.value);
+  };
+  const handleProductPrice = (event) => {
+    setProductPrice(event.target.value);
+  };
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        await axios
+          .get("http://localhost:3001/api/get/" + id)
+          .then((response) => {
+            setProduct(response.data);
+          });
+      } catch (error) {
+        if (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Server Error!",
+          });
+        }
+      }
+    };
+    getData();
+  }, [id]);
 
   const handleProduct = (e) => {
     e.preventDefault();
 
-    axios
-      .put("http://localhost:3001/update/" + id, {
-        productName,
-        productPrice,
-      })
-      .then((res) => {
-        console.log(res.data);
-        alert("Successfully done");
-        navigate("/");
-      })
-      .catch((err) => console.log(err));
+    try {
+      axios
+        .put("http://localhost:3001/update/" + id, {
+          productName: productName,
+          productPrice: productPrice,
+        })
+        .then((res) => {
+          if (res) {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Your product has been updated",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      if (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Server side error while updating product!",
+        });
+      }
+    }
   };
 
   return (
@@ -32,31 +79,31 @@ export default function UpdateProduct() {
             <form className="mt-5" onSubmit={handleProduct}>
               <div className="mb-3">
                 <label htmlFor="product" className="form-label">
-                  Enter Product Name
+                  Product Name:
                 </label>
                 <input
                   type="name"
                   className="form-control"
                   id="product"
                   aria-describedby="nameHelp"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
+                  value={product.productName}
+                  onChange={handleProductName}
                 />
               </div>
               <div className="mb-3">
                 <label htmlFor="price" className="form-label">
-                  Price
+                  Product Price:
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="price"
-                  value={productPrice}
-                  onChange={(e) => setPrice(e.target.value)}
+                  value={product.productPrice}
+                  onChange={handleProductPrice}
                 />
               </div>
               <button type="submit" className="btn btn-warning">
-                Submit
+                Update
               </button>
             </form>
           </div>
