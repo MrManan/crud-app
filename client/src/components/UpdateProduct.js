@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Alert } from "@mui/material";
 
 export default function UpdateProduct() {
   const navigate = useNavigate();
@@ -10,6 +11,12 @@ export default function UpdateProduct() {
   const [product, setProduct] = useState({});
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
+  const [productError, setProductError] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
+
+  const handleAlertClose = () => {
+    setShowAlert(false);
+  };
 
   const handleProductName = (event) => {
     setProductName(event.target.value);
@@ -38,36 +45,50 @@ export default function UpdateProduct() {
     getData();
   }, [id]);
 
+  const validateInputFields = () => {
+    var validation = true;
+    if (productName === "" || productPrice === "") {
+      setProductError("Input fields are required");
+      validation = false;
+    }
+    return validation;
+  };
+
   const handleProduct = (e) => {
     e.preventDefault();
-
-    try {
-      axios
-        .put("http://localhost:3001/update/" + id, {
-          productName: productName,
-          productPrice: productPrice,
-        })
-        .then((res) => {
-          if (res) {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Your product has been updated",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            navigate("/");
-          }
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Server side error while updating product!",
-        });
+    setProductError("");
+    if (validateInputFields()) {
+      try {
+        axios
+          .put("http://localhost:3001/update/" + id, {
+            productName: productName,
+            productPrice: productPrice,
+          })
+          .then((res) => {
+            if (res) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your product has been updated",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate("/");
+            }
+          })
+          .catch((err) => console.log(err));
+      } catch (error) {
+        if (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Server side error while updating product!",
+          });
+        }
       }
+    }
+    if (!validateInputFields()) {
+      setShowAlert(true);
     }
   };
 
@@ -76,29 +97,43 @@ export default function UpdateProduct() {
       <div className="container">
         <div className="row">
           <div className="col-md-6">
+            {productError
+              ? showAlert && (
+                  <Alert
+                    onClose={() => {
+                      handleAlertClose();
+                    }}
+                    elevation={6}
+                    variant="filled"
+                    severity="error"
+                  >
+                    {productError}
+                  </Alert>
+                )
+              : ""}
             <form className="mt-5" onSubmit={handleProduct}>
               <div className="mb-3">
-                <label htmlFor="product" className="form-label">
+                <label htmlFor="productName" className="form-label">
                   Product Name:
                 </label>
                 <input
-                  type="name"
+                  type="text"
                   className="form-control"
-                  id="product"
+                  id="productName"
                   aria-describedby="nameHelp"
-                  value={product.productName}
+                  defaultValue={product.productName}
                   onChange={handleProductName}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="price" className="form-label">
+                <label htmlFor="productPrice" className="form-label">
                   Product Price:
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  id="price"
-                  value={product.productPrice}
+                  id="productPrice"
+                  defaultValue={product.productPrice}
                   onChange={handleProductPrice}
                 />
               </div>

@@ -5,16 +5,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { TablePagination } from "@mui/material";
-
-export default function Home(props) {
+import LinearProgress from "@mui/material/LinearProgress";
+export default function Home() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Get Product
 
   useEffect(() => {
     const getData = async () => {
       try {
+        setLoading(true);
         await axios
           .get("http://localhost:3001/api/getData")
           .then((response) => setProducts(response.data));
+        setLoading(false);
       } catch (error) {
         if (error) {
           Swal.fire({
@@ -27,6 +32,9 @@ export default function Home(props) {
     };
     getData();
   }, []);
+
+  // Delete Product
+
   const deleteProduct = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -64,6 +72,9 @@ export default function Home(props) {
       }
     });
   };
+
+  // Pagination
+
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -76,73 +87,79 @@ export default function Home(props) {
   };
 
   return (
-    <div className="mt-5">
-      <div className="container">
-        <div className="add-btn mt-2">
-          <Link to="CreateProduct">
-            <button className="btn btn-primary text-decoration-none">
-              CreateProduct
-            </button>
-          </Link>
-        </div>
+    <>
+      <div className="mt-5">
+        <div className="container">
+          <div className="add-btn mt-2">
+            <Link to="CreateProduct">
+              <button className="btn btn-primary text-decoration-none">
+                CreateProduct
+              </button>
+            </Link>
+          </div>
 
-        <table className="table table-striped mt-2">
-          <thead className="table-dark text-center">
-            <tr>
-              <th>ID</th>
-              <th>Product Name</th>
-              <th>Price</th>
-              <th>Operations</th>
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {products
-              .slice(
-                currentPage * rowsPerPage,
-                currentPage * rowsPerPage + rowsPerPage
-              )
-              .map((data, i) => {
-                return (
-                  <tr key={i}>
-                    <th scope="row">{i + 1}</th>
-                    <td>{data.productName}</td>
-                    <td>{data.productPrice}</td>
-                    <td className="d-flex justify-content-center">
-                      <Link to={`UpdateProduct/${data.id}`}>
-                        <button className="btn btn-warning text-decoration-none ms-2">
-                          <EditIcon />
-                        </button>
-                      </Link>
-                      <button
-                        className="btn btn-danger text-decoration-none ms-2"
-                        onClick={() => {
-                          deleteProduct(data.id);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component="div"
-          count={products.length}
-          rowsPerPage={rowsPerPage}
-          page={!products.length || products.length <= 0 ? 0 : currentPage}
-          SelectProps={{
-            inputProps: {
-              "aria-label": "rows per page",
-            },
-            native: true,
-          }}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+          {loading ? (
+            <LinearProgress sx={{ width: "100%" }} />
+          ) : (
+            <table className="table table-striped mt-2">
+              <thead className="table-dark text-center">
+                <tr>
+                  <th>ID</th>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Operations</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {products
+                  .slice(
+                    currentPage * rowsPerPage,
+                    currentPage * rowsPerPage + rowsPerPage
+                  )
+                  .map((data, i) => {
+                    return (
+                      <tr key={i}>
+                        <th scope="row">{i + 1}</th>
+                        <td>{data.productName}</td>
+                        <td>{data.productPrice}</td>
+                        <td className="d-flex justify-content-center">
+                          <Link to={`UpdateProduct/${data.id}`}>
+                            <button className="btn btn-warning text-decoration-none ms-2">
+                              <EditIcon />
+                            </button>
+                          </Link>
+                          <button
+                            className="btn btn-danger text-decoration-none ms-2"
+                            onClick={() => {
+                              deleteProduct(data.id);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          )}
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 15]}
+            component="div"
+            count={products.length}
+            rowsPerPage={rowsPerPage}
+            page={!products.length || products.length <= 0 ? 0 : currentPage}
+            SelectProps={{
+              inputProps: {
+                "aria-label": "rows per page",
+              },
+              native: true,
+            }}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

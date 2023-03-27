@@ -1,12 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-export default function Navbar(props) {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-    props.onSearchChange(event.target.value);
-  };
+export default function Navbar() {
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-light">
@@ -38,12 +32,7 @@ export default function Navbar(props) {
                 placeholder="Search"
                 aria-label="Search"
               />
-              <button
-                className="btn btn-outline-secondary"
-                type="submit"
-                value={searchTerm}
-                onChange={handleSearch}
-              >
+              <button className="btn btn-outline-secondary" type="submit">
                 Search
               </button>
             </form>
