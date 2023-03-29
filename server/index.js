@@ -22,12 +22,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Post data
 
 app.post("/product", (req, res) => {
-  const productName = req.body.productName;
-  const productPrice = req.body.productPrice;
-  const sql =
-    "INSERT INTO productdetails (productName, productPrice) VALUES (?,?)";
-  connection.query(sql, [productName, productPrice], (err, result) => {
-    if (err) return res.status(500).end(err);
+  const { name, price } = req.body;
+  const sql = "INSERT INTO product (name, price) VALUES (?, ?)";
+  connection.query(sql, [name, price], (err, result) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
     res.send(result);
   });
 });
@@ -35,7 +35,7 @@ app.post("/product", (req, res) => {
 // Fetch data
 
 app.get("/api/getData", (req, res) => {
-  const sql = "SELECT * FROM productdetails";
+  const sql = "SELECT * FROM product";
   connection.query(sql, (error, results) => {
     if (error) {
       throw error;
@@ -48,7 +48,7 @@ app.get("/api/getData", (req, res) => {
 
 app.put("/update/:id", (req, res) => {
   const sql =
-    "UPDATE productdetails SET productName = ?, productPrice = ? WHERE id = ?";
+    "UPDATE product SET productName = ?, productPrice = ? WHERE id = ?";
   const values = [req.body.productName, req.body.productPrice];
   const id = req.params.id;
   connection.query(sql, [...values, id], (error, results) => {
@@ -61,22 +61,20 @@ app.put("/update/:id", (req, res) => {
 
 app.delete("/delete/:id", (req, res) => {
   const id = req.params.id;
-  connection.query(
-    "DELETE FROM productdetails WHERE id=?",
-    id,
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
+  connection.query("DELETE FROM product WHERE id=?", id, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
     }
-  );
+  });
 });
+
+// Get data to display in update input
 
 app.get("/api/get/:id", (req, res) => {
   const id = req.params.id;
-  const sql = "SELECT * FROM productdetails WHERE id=?";
+  const sql = "SELECT * FROM product WHERE id=?";
 
   connection.query({ sql, values: [id] }, (error, results) => {
     if (error) {
@@ -85,6 +83,19 @@ app.get("/api/get/:id", (req, res) => {
     res.send(results[0]);
   });
 });
+
+// Get data from catagories
+
+app.get("/api/category", (req, res) => {
+  const sql = "SELECT * FROM catagory";
+  connection.query(sql, (error, result) => {
+    if (error) {
+      throw error;
+    }
+    res.send(result);
+  });
+});
+
 // Get response
 
 app.get("*", (req, res) => {

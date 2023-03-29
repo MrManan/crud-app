@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Alert } from "@mui/material";
 export default function CreateProduct() {
   const [productName, setProductName] = useState("");
-  const [productPrice, setPrice] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const [productError, setProductError] = useState("");
   const [showAlert, setShowAlert] = useState(true);
+  const [productCatagory, setProductCatagory] = useState([]);
+  const navigate = useNavigate();
 
   const handleAlertClose = () => {
     setShowAlert(false);
   };
-  const navigate = useNavigate();
+
 
   const validateInputFields = () => {
     var validation = true;
@@ -30,10 +32,10 @@ export default function CreateProduct() {
       try {
         axios
           .post("http://localhost:3001/product", {
-            productName: productName,
-            productPrice: productPrice,
+            name: productName,
+            price: productPrice,
           })
-          .then((res) => {
+          .then((err, res) => {
             if (res) {
               Swal.fire({
                 position: "top-end",
@@ -43,6 +45,9 @@ export default function CreateProduct() {
                 timer: 1500,
               });
               navigate("/");
+            }
+            if (err) {
+              console.log(err.messages);
             }
           });
       } catch (error) {
@@ -60,8 +65,23 @@ export default function CreateProduct() {
     }
   };
 
+  useEffect(() => {
+    const getCatagory = async () => {
+      try {
+        await axios
+          .get("http://localhost:3001/api/category")
+          .then((response) => {
+            setProductCatagory(response.data);
+            console.log(response.data);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCatagory();
+  }, []);
   return (
-    <div>
+    <>
       <div className="container">
         <div className="row">
           <form className="mt-5" onSubmit={handleProduct}>
@@ -91,6 +111,21 @@ export default function CreateProduct() {
                 onChange={(e) => setProductName(e.target.value)}
               />
             </div>
+            <div className="mb-3 mt-3 col-lg-6 col-md-6 col-12">
+              <select
+                className="form-select "
+                aria-label="Default select example"
+              >
+                <option>Select Catagories</option>
+                {productCatagory.map((item) => {
+                  return (
+                    <option value={item.id} text={item.name} key={item.id}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
             <div className="mb-3 col-lg-6 col-md-6 col-12">
               <label htmlFor="productPrice" className="form-label">
                 Product Price:
@@ -99,7 +134,7 @@ export default function CreateProduct() {
                 type="text"
                 className="form-control"
                 id="productPrice"
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setProductPrice(e.target.value)}
               />
             </div>
             <button type="submit" className="btn btn-primary">
@@ -108,6 +143,6 @@ export default function CreateProduct() {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }

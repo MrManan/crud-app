@@ -121,7 +121,7 @@ export default function UpdateProduct() {
                   className="form-control"
                   id="productName"
                   aria-describedby="nameHelp"
-                  defaultValue={product.productName}
+                  defaultValue={product.name}
                   onChange={handleProductName}
                 />
               </div>
@@ -133,7 +133,7 @@ export default function UpdateProduct() {
                   type="text"
                   className="form-control"
                   id="productPrice"
-                  defaultValue={product.productPrice}
+                  defaultValue={product.price}
                   onChange={handleProductPrice}
                 />
               </div>

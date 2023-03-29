@@ -120,8 +120,8 @@ export default function Home() {
                     return (
                       <tr key={i}>
                         <th scope="row">{i + 1}</th>
-                        <td>{data.productName}</td>
-                        <td>{data.productPrice}</td>
+                        <td>{data.name}</td>
+                        <td>{data.price}</td>
                         <td className="d-flex justify-content-center">
                           <Link to={`UpdateProduct/${data.id}`}>
                             <button className="btn btn-warning text-decoration-none ms-2">
