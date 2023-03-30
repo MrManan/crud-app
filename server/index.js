@@ -26,7 +26,7 @@ app.post("/product", (req, res) => {
   const sql = "INSERT INTO product (name, price) VALUES (?, ?)";
   connection.query(sql, [name, price], (err, result) => {
     if (err) {
-      return res.status(500).send(err);
+      return res.status(500).end(err);
     }
     res.send(result);
   });
@@ -81,18 +81,6 @@ app.get("/api/get/:id", (req, res) => {
       throw error;
     }
     res.send(results[0]);
-  });
-});
-
-// Get data from catagories
-
-app.get("/api/category", (req, res) => {
-  const sql = "SELECT * FROM catagory";
-  connection.query(sql, (error, result) => {
-    if (error) {
-      throw error;
-    }
-    res.send(result);
   });
 });
 

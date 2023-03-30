@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -8,13 +8,11 @@ export default function CreateProduct() {
   const [productPrice, setProductPrice] = useState("");
   const [productError, setProductError] = useState("");
   const [showAlert, setShowAlert] = useState(true);
-  const [productCatagory, setProductCatagory] = useState([]);
   const navigate = useNavigate();
 
   const handleAlertClose = () => {
     setShowAlert(false);
   };
-
 
   const validateInputFields = () => {
     var validation = true;
@@ -65,21 +63,6 @@ export default function CreateProduct() {
     }
   };
 
-  useEffect(() => {
-    const getCatagory = async () => {
-      try {
-        await axios
-          .get("http://localhost:3001/api/category")
-          .then((response) => {
-            setProductCatagory(response.data);
-            console.log(response.data);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCatagory();
-  }, []);
   return (
     <>
       <div className="container">
@@ -117,13 +100,8 @@ export default function CreateProduct() {
                 aria-label="Default select example"
               >
                 <option>Select Catagories</option>
-                {productCatagory.map((item) => {
-                  return (
-                    <option value={item.id} text={item.name} key={item.id}>
-                      {item.name}
-                    </option>
-                  );
-                })}
+
+                <option></option>
               </select>
             </div>
             <div className="mb-3 col-lg-6 col-md-6 col-12">
