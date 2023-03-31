@@ -6,7 +6,7 @@ import { Alert } from "@mui/material";
 
 export default function UpdateProduct() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams(); 
 
   const [product, setProduct] = useState({});
   const [productName, setProductName] = useState("");

@@ -22,9 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Post data
 
 app.post("/product", (req, res) => {
-  const { name, price } = req.body;
-  const sql = "INSERT INTO product (name, price) VALUES (?, ?)";
-  connection.query(sql, [name, price], (err, result) => {
+  const { name, price, catagoryid } = req.body;
+  const sql = "INSERT INTO product (name, price,catagoryid) VALUES (?, ?,?)";
+  connection.query(sql, [name, price, catagoryid], (err, result) => {
     if (err) {
       return res.status(500).end(err);
     }
@@ -81,6 +81,18 @@ app.get("/api/get/:id", (req, res) => {
       throw error;
     }
     res.send(results[0]);
+  });
+});
+
+//Get category
+
+app.get("/api/getCategory", (req, res) => {
+  const sql = "SELECT * FROM catagory";
+  connection.query(sql, (error, result) => {
+    if (error) {
+      throw error;
+    }
+    res.send(result);
   });
 });
 

@@ -1,22 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Alert } from "@mui/material";
 export default function CreateProduct() {
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
+   const [productName, setProductName] = useState("");
+   const [productPrice, setProductPrice] = useState("");
   const [productError, setProductError] = useState("");
   const [showAlert, setShowAlert] = useState(true);
+  const [category, setCategory] = useState(0);
+  const [listCategory, setListCategory] = useState([]);
   const navigate = useNavigate();
-
+  const selectId = useId();
   const handleAlertClose = () => {
     setShowAlert(false);
   };
 
+  useEffect(() => {
+    const getCategory = async () => {
+      await axios
+        .get("http://localhost:3001/api/getCategory")
+        .then((response) => {
+          setListCategory(response.data);
+        });
+    };
+    getCategory();
+  }, []);
+
   const validateInputFields = () => {
     var validation = true;
-    if (productName === "" || productPrice === "") {
+    if (productName === "" || productPrice === "" || category === "") {
       setProductError("Input fields are required");
       validation = false;
     }
@@ -32,6 +45,7 @@ export default function CreateProduct() {
           .post("http://localhost:3001/product", {
             name: productName,
             price: productPrice,
+            catagoryid: category,
           })
           .then((err, res) => {
             if (res) {
@@ -97,11 +111,24 @@ export default function CreateProduct() {
             <div className="mb-3 mt-3 col-lg-6 col-md-6 col-12">
               <select
                 className="form-select "
-                aria-label="Default select example"
+                name="selectCategory"
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                }}
               >
                 <option>Select Catagories</option>
-
-                <option></option>
+                {listCategory.map((item, index) => {
+                  return (
+                    <option
+                      text={item.name}
+                      key={index}
+                      id={selectId}
+                      value={item.id}
+                    >
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
             <div className="mb-3 col-lg-6 col-md-6 col-12">
