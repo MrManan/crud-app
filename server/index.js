@@ -22,9 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Post data
 
 app.post("/product", (req, res) => {
-  const { name, price, catagoryid } = req.body;
-  const sql = "INSERT INTO product (name, price,catagoryid) VALUES (?, ?,?)";
-  connection.query(sql, [name, price, catagoryid], (err, result) => {
+  const { name, price, categoryid } = req.body;
+  const sql = "INSERT INTO product (name, price,categoryid) VALUES (?, ?,?)";
+  connection.query(sql, [name, price, categoryid], (err, result) => {
     if (err) {
       return res.status(500).end(err);
     }
@@ -47,9 +47,8 @@ app.get("/api/getData", (req, res) => {
 // Update data
 
 app.put("/update/:id", (req, res) => {
-  const sql =
-    "UPDATE product SET productName = ?, productPrice = ? WHERE id = ?";
-  const values = [req.body.productName, req.body.productPrice];
+  const sql = "UPDATE product SET name = ?, price = ? WHERE id = ?";
+  const values = [req.body.name, req.body.price];
   const id = req.params.id;
   connection.query(sql, [...values, id], (error, results) => {
     if (error) throw error;
@@ -87,7 +86,7 @@ app.get("/api/get/:id", (req, res) => {
 //Get category
 
 app.get("/api/getCategory", (req, res) => {
-  const sql = "SELECT * FROM catagory";
+  const sql = "SELECT * FROM category";
   connection.query(sql, (error, result) => {
     if (error) {
       throw error;
