@@ -36,20 +36,19 @@ export default function CreateProduct() {
     return validation;
   };
 
-  const handleProduct = async (e) => {
+  const handleProduct = (e) => {
     e.preventDefault();
     setProductError("");
     if (validateInputFields()) {
       try {
-        await axios
-          .post("http://localhost:3001/product", {
+        axios
+          .post("http://localhost:3001/api/createProduct", {
             name: productName,
             price: productPrice,
             categoryid: category,
           })
-          .then((error, response) => {
-            console.log(response);
-            if (response) {
+          .then((res, err) => {
+            if (res) {
               Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -59,12 +58,9 @@ export default function CreateProduct() {
               });
               navigate("/");
             }
-            if (error) {
-              console.log(error.message);
+            if (err) {
+              console.log(err.messages);
             }
-          })
-          .catch((error) => {
-            console.error(error);
           });
       } catch (error) {
         if (error) {
