@@ -24,11 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post("/product", (req, res) => {
   const { name, price, categoryid } = req.body;
   const sql = "INSERT INTO product (name, price,categoryid) VALUES (?, ?,?)";
-<<<<<<< HEAD
   connection.query(sql, [name, price, categoryid], (err, result) => {
-=======
-  connection.query(sql, [name, price, +categoryid], (err, result) => {
->>>>>>> 6fd32e95f5e0fe2d5e44bceb7a0e00bccb65d5e5
     if (err) {
       return res.status(500).end(err);
     }
