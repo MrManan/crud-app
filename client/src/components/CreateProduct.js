@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Alert } from "@mui/material";
 export default function CreateProduct() {
-   const [productName, setProductName] = useState("");
-   const [productPrice, setProductPrice] = useState("");
+  const [productName, setProductName] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const [productError, setProductError] = useState("");
   const [showAlert, setShowAlert] = useState(true);
   const [category, setCategory] = useState(0);
@@ -36,19 +36,20 @@ export default function CreateProduct() {
     return validation;
   };
 
-  const handleProduct = (e) => {
+  const handleProduct = async (e) => {
     e.preventDefault();
     setProductError("");
     if (validateInputFields()) {
       try {
-        axios
+        await axios
           .post("http://localhost:3001/product", {
             name: productName,
             price: productPrice,
             categoryid: category,
           })
-          .then((err, res) => {
-            if (res) {
+          .then((error, response) => {
+            console.log(response);
+            if (response) {
               Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -58,9 +59,12 @@ export default function CreateProduct() {
               });
               navigate("/");
             }
-            if (err) {
-              console.log(err.messages);
+            if (error) {
+              console.log(error.message);
             }
+          })
+          .catch((error) => {
+            console.error(error);
           });
       } catch (error) {
         if (error) {

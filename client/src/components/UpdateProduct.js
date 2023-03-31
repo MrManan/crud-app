@@ -6,7 +6,7 @@ import { Alert } from "@mui/material";
 
 export default function UpdateProduct() {
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const [product, setProduct] = useState({});
   const [productName, setProductName] = useState("");
@@ -61,8 +61,8 @@ export default function UpdateProduct() {
       try {
         axios
           .put("http://localhost:3001/update/" + id, {
-            productName: productName,
-            productPrice: productPrice,
+            name: productName,
+            price: productPrice,
           })
           .then((res) => {
             if (res) {

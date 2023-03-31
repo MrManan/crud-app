@@ -48,9 +48,8 @@ app.get("/api/getData", (req, res) => {
 // Update data
 
 app.put("/update/:id", (req, res) => {
-  const sql =
-    "UPDATE product SET productName = ?, productPrice = ? WHERE id = ?";
-  const values = [req.body.productName, req.body.productPrice];
+  const sql = "UPDATE product SET name = ?, price = ? WHERE id = ?";
+  const values = [req.body.name, req.body.price];
   const id = req.params.id;
   connection.query(sql, [...values, id], (error, results) => {
     if (error) throw error;
