@@ -22,9 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Post data
 
 app.post("/product", (req, res) => {
-  const { name, price, catagoryid } = req.body;
-  const sql = "INSERT INTO product (name, price,catagoryid) VALUES (?, ?,?)";
-  connection.query(sql, [name, price, catagoryid], (err, result) => {
+  const { name, price, categoryid } = req.body;
+  const sql = "INSERT INTO product (name, price,categoryid) VALUES (?, ?,?)";
+  connection.query(sql, [name, price, +categoryid], (err, result) => {
     if (err) {
       return res.status(500).end(err);
     }
@@ -87,7 +87,7 @@ app.get("/api/get/:id", (req, res) => {
 //Get category
 
 app.get("/api/getCategory", (req, res) => {
-  const sql = "SELECT * FROM catagory";
+  const sql = "SELECT * FROM category";
   connection.query(sql, (error, result) => {
     if (error) {
       throw error;

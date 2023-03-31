@@ -45,7 +45,7 @@ export default function CreateProduct() {
           .post("http://localhost:3001/product", {
             name: productName,
             price: productPrice,
-            catagoryid: category,
+            categoryid: category,
           })
           .then((err, res) => {
             if (res) {
