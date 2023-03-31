@@ -28,7 +28,8 @@ app.post("/product", (req, res) => {
     if (err) {
       return res.status(500).end(err);
     }
-    res.send(result);
+    console.warn(result);
+    return res.send(result);
   });
 });
 
